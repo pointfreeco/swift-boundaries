@@ -28,7 +28,7 @@ public final class Store<S, A> {
       }
     case let .dispatch(action):
       self.dispatch(action)
-    case let ._execute(tag: _, f: f, arg: arg):
+    case let ._execute(_, arg, f):
       if let action = f(arg) { self.dispatch(action) }
     case let .sequence(effects):
       effects.forEach(self.interpret)

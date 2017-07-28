@@ -18,9 +18,9 @@
             - batch: 0 elements
           ▿ Boundaries.Effect<BoundariesTests.AppAction>._execute
             ▿ _execute: (3 elements)
-              - tag: "Print"
-              - f: (Function)
-              - arg: "incr"
+              - .0: "Print"
+              - .1: "incr"
+              - .2: (Function)
     ▿ (2 elements)
       ▿ state: BoundariesTests.AppState
         ▿ counter: BoundariesTests.CounterState
@@ -32,9 +32,9 @@
             - batch: 0 elements
           ▿ Boundaries.Effect<BoundariesTests.AppAction>._execute
             ▿ _execute: (3 elements)
-              - tag: "Print"
-              - f: (Function)
-              - arg: "decr"
+              - .0: "Print"
+              - .1: "decr"
+              - .2: (Function)
     ▿ (2 elements)
       ▿ state: BoundariesTests.AppState
         ▿ counter: BoundariesTests.CounterState
@@ -44,8 +44,8 @@
         ▿ sequence: 2 elements
           ▿ Boundaries.Effect<BoundariesTests.AppAction>._execute
             ▿ _execute: (3 elements)
-              - tag: "Clear Cache"
-              - f: (Function)
-              - arg: Prelude.Unit
+              - .0: "Clear Cache"
+              - .1: Prelude.Unit
+              - .2: (Function)
           ▿ Boundaries.Effect<BoundariesTests.AppAction>.batch
             - batch: 0 elements

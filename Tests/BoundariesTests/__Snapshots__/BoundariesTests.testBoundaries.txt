@@ -1,0 +1,31 @@
+▿ NonEmpty.NonEmptyArray<(state: BoundariesTests.CounterState, effect: Boundaries.Effect<BoundariesTests.CounterAction>)>
+  ▿ head: (2 elements)
+    ▿ state: BoundariesTests.CounterState
+      - count: 0
+    ▿ effect: Boundaries.Effect<BoundariesTests.CounterAction>.batch
+      - batch: 0 elements
+  ▿ tail: 3 elements
+    ▿ (2 elements)
+      ▿ state: BoundariesTests.CounterState
+        - count: 1
+      ▿ effect: Boundaries.Effect<BoundariesTests.CounterAction>._execute
+        ▿ _execute: (3 elements)
+          - tag: "Print"
+          - f: (Function)
+          - arg: "incr"
+    ▿ (2 elements)
+      ▿ state: BoundariesTests.CounterState
+        - count: 2
+      ▿ effect: Boundaries.Effect<BoundariesTests.CounterAction>._execute
+        ▿ _execute: (3 elements)
+          - tag: "Print"
+          - f: (Function)
+          - arg: "incr"
+    ▿ (2 elements)
+      ▿ state: BoundariesTests.CounterState
+        - count: 1
+      ▿ effect: Boundaries.Effect<BoundariesTests.CounterAction>._execute
+        ▿ _execute: (3 elements)
+          - tag: "Print"
+          - f: (Function)
+          - arg: "decr"

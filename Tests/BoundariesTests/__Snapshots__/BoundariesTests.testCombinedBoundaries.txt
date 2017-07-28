@@ -1,0 +1,51 @@
+▿ NonEmpty.NonEmptyArray<(state: BoundariesTests.AppState, effect: Boundaries.Effect<BoundariesTests.AppAction>)>
+  ▿ head: (2 elements)
+    ▿ state: BoundariesTests.AppState
+      ▿ counter: BoundariesTests.CounterState
+        - count: 0
+      - loggedIn: true
+    ▿ effect: Boundaries.Effect<BoundariesTests.AppAction>.batch
+      - batch: 0 elements
+  ▿ tail: 3 elements
+    ▿ (2 elements)
+      ▿ state: BoundariesTests.AppState
+        ▿ counter: BoundariesTests.CounterState
+          - count: 1
+        - loggedIn: true
+      ▿ effect: Boundaries.Effect<BoundariesTests.AppAction>.sequence
+        ▿ sequence: 2 elements
+          ▿ Boundaries.Effect<BoundariesTests.AppAction>.batch
+            - batch: 0 elements
+          ▿ Boundaries.Effect<BoundariesTests.AppAction>._execute
+            ▿ _execute: (3 elements)
+              - tag: "Print"
+              - f: (Function)
+              - arg: "incr"
+    ▿ (2 elements)
+      ▿ state: BoundariesTests.AppState
+        ▿ counter: BoundariesTests.CounterState
+          - count: 0
+        - loggedIn: true
+      ▿ effect: Boundaries.Effect<BoundariesTests.AppAction>.sequence
+        ▿ sequence: 2 elements
+          ▿ Boundaries.Effect<BoundariesTests.AppAction>.batch
+            - batch: 0 elements
+          ▿ Boundaries.Effect<BoundariesTests.AppAction>._execute
+            ▿ _execute: (3 elements)
+              - tag: "Print"
+              - f: (Function)
+              - arg: "decr"
+    ▿ (2 elements)
+      ▿ state: BoundariesTests.AppState
+        ▿ counter: BoundariesTests.CounterState
+          - count: 0
+        - loggedIn: false
+      ▿ effect: Boundaries.Effect<BoundariesTests.AppAction>.sequence
+        ▿ sequence: 2 elements
+          ▿ Boundaries.Effect<BoundariesTests.AppAction>._execute
+            ▿ _execute: (3 elements)
+              - tag: "Clear Cache"
+              - f: (Function)
+              - arg: Prelude.Unit
+          ▿ Boundaries.Effect<BoundariesTests.AppAction>.batch
+            - batch: 0 elements

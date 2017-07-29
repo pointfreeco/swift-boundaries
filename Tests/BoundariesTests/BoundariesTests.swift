@@ -109,5 +109,5 @@ enum AppAction {
 }
 
 let combinedReducer: Reducer<AppState, AppAction> =
-  settingsReducer.lift(action: AppAction.prism.settingsAction, state: lens(\AppState.settingsState))
-    <> counterReducer.lift(action: AppAction.prism.counterAction, state: lens(\AppState.counter))
+  settingsReducer.lift(action: AppAction.prism.settingsAction, state: \AppState.settingsState)
+    <> counterReducer.lift(action: AppAction.prism.counterAction, state: \AppState.counter)

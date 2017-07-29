@@ -49,7 +49,7 @@ public final class Store<S, A> {
     self.subscribers.append(subscriber)
   }
 
-  public func subscribe<T>(state lens: Lens<S, T>, _ subscriber: @escaping (T) -> Void) {
-    self.subscribe(lens.get >>> subscriber)
+  public func subscribe<T>(state keyPath: KeyPath<S, T>, _ subscriber: @escaping (T) -> Void) {
+    self.subscribe(subscriber <<< view(getting(keyPath)))
   }
 }

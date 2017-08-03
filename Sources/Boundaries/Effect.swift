@@ -1,25 +1,29 @@
 import Prelude
 
 public enum Effect<A> {
+  case _execute(Any, (@escaping (A) -> ()) -> ())
   case batch([Effect<A>])
   case dispatch(A)
   case sequence([Effect<A>])
-  case _execute(String, Any, (Any, @escaping (A) -> ()) -> ())
+
+  public static func execute(
+    fingerprint: Any = "\(#file):\(#line):\(#function)",
+    _ callback: @escaping ((A) -> ()) -> ())
+    -> Effect {
+
+      return ._execute(fingerprint, callback)
+  }
 
   public static var noop: Effect { return .batch([]) }
 
-  public static func execute<B>(_ tag: String, _ arg: B, _ f: @escaping (B, (A) -> ()) -> ()) -> Effect {
-    return ._execute(tag, arg, { arg, dispatch in f(arg as! B, dispatch) })
-  }
-
   public func map<B>(_ f: @escaping (A) -> B) -> Effect<B> {
     switch self {
+    case let ._execute(fingerprint, effect):
+      return ._execute(fingerprint, { dispatch in effect(dispatch <<< f) })
     case let .batch(effects):
       return .batch(effects.map { $0.map(f) })
     case let .dispatch(action):
       return .dispatch(f(action))
-    case let ._execute(tag, arg, effect):
-      return ._execute(tag, arg, { arg, dispatch in effect(arg, dispatch <<< f) })
     case let .sequence(effects):
       return .sequence(effects.map { $0.map(f) })
     }

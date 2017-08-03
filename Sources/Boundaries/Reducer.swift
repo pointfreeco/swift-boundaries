@@ -27,16 +27,16 @@ public struct Reducer<S, A> {
     }
   }
 
-  public func lift<T>(state lens: Lens<T, S>) -> Reducer<T, A> {
+  public func lift<T>(state keyPath: WritableKeyPath<T, S>) -> Reducer<T, A> {
     return Reducer<T, A> { action, stateT in
-      let stateS = lens.get(stateT)
+      let stateS = stateT .^ keyPath
       let (newStateS, effect) = self.reduce(action, stateS)
-      return (lens.set(stateT, newStateS), effect)
+      return (stateT |> keyPath .~ newStateS, effect)
     }
   }
 
-  public func lift<T, B>(action prism: Prism<B, A>, state lens: Lens<T, S>) -> Reducer<T, B> {
-    return self.lift(action: prism).lift(state: lens)
+  public func lift<T, B>(action prism: Prism<B, A>, state keyPath: WritableKeyPath<T, S>) -> Reducer<T, B> {
+    return self.lift(action: prism).lift(state: keyPath)
   }
 }
 

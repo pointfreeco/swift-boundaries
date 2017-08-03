@@ -19,7 +19,7 @@ public struct Reducer<S, A> {
   }
 
   public func lift<B>(action prism: Prism<B, A>) -> Reducer<S, B> {
-    return Reducer<S, B> { actionB, state in
+    return .init { actionB, state in
       prism
         .preview(actionB)
         .map { self.reduce($0, state) |> second(map(prism.review)) }
@@ -42,11 +42,11 @@ public struct Reducer<S, A> {
 
 extension Reducer: Monoid {
   public static var empty: Reducer<S, A> {
-    return Reducer { _, state in (state, .noop) }
+    return .init { _, state in (state, .noop) }
   }
 
   public static func <>(lhs: Reducer, rhs: Reducer) -> Reducer {
-    return Reducer { action, state in
+    return .init { action, state in
       let (state1, effect1) = lhs.reduce(action, state)
       let (state2, effect2) = rhs.reduce(action, state1)
       return (state2, .sequence([effect1, effect2]))

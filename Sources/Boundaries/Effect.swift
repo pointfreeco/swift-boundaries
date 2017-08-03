@@ -4,12 +4,12 @@ public enum Effect<A> {
   case batch([Effect<A>])
   case dispatch(A)
   case sequence([Effect<A>])
-  case _execute(String, Any, (Any) -> A?)
+  case _execute(String, Any, (Any, @escaping (A) -> ()) -> ())
 
-  static var noop: Effect { return .batch([]) }
+  public static var noop: Effect { return .batch([]) }
 
-  public static func execute<B>(_ tag: String, _ arg: B, _ f: @escaping (B) -> A?) -> Effect {
-    return ._execute(tag, arg, { any in f(any as! B) })
+  public static func execute<B>(_ tag: String, _ arg: B, _ f: @escaping (B, (A) -> ()) -> ()) -> Effect {
+    return ._execute(tag, arg, { arg, dispatch in f(arg as! B, dispatch) })
   }
 
   public func map<B>(_ f: @escaping (A) -> B) -> Effect<B> {
@@ -19,7 +19,7 @@ public enum Effect<A> {
     case let .dispatch(action):
       return .dispatch(f(action))
     case let ._execute(tag, arg, effect):
-      return ._execute(tag, arg, { arg in effect(arg).map(f) })
+      return ._execute(tag, arg, { arg, dispatch in effect(arg, dispatch <<< f) })
     case let .sequence(effects):
       return .sequence(effects.map { $0.map(f) })
     }

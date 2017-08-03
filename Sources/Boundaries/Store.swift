@@ -29,7 +29,7 @@ public final class Store<S, A> {
     case let .dispatch(action):
       self.dispatch(action)
     case let ._execute(_, arg, f):
-      if let action = f(arg) { self.dispatch(action) }
+      f(arg, self.dispatch)
     case let .sequence(effects):
       effects.forEach(self.interpret)
     }

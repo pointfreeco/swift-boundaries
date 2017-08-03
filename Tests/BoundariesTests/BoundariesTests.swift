@@ -34,7 +34,7 @@ final class BoundariesTests: XCTestCase {
 }
 
 func print<A>(_ string: String) -> Effect<A> {
-  return .execute("Print", string) { s in print(s); return nil }
+  return .execute("Print", string) { string, _ in print(string) }
 }
 
 struct CounterState {
@@ -68,7 +68,7 @@ let settingsReducer = Reducer<SettingsState, SettingsAction> { action, state in
   case .logout:
     return (
       .init(loggedIn: false),
-      .execute("Clear Cache", unit, const(nil))
+      .execute("Clear Cache", unit) { _, _ in }
     )
   }
 }

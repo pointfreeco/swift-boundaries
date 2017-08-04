@@ -1,11 +1,16 @@
-▿ NonEmpty.NonEmptyArray<(state: BoundariesTests.CounterState, effect: Boundaries.Effect<BoundariesTests.CounterAction>)>
-  ▿ head: (2 elements)
+▿ NonEmpty.NonEmptyArray<(message: Swift.String, action: Swift.Optional<BoundariesTests.CounterAction>, state: BoundariesTests.CounterState, effect: Boundaries.Effect<BoundariesTests.CounterAction>)>
+  ▿ head: (4 elements)
+    - message: "TestStore.init"
+    - action: nil
     ▿ state: BoundariesTests.CounterState
       - count: 0
     ▿ effect: Boundaries.Effect<BoundariesTests.CounterAction>.batch
       - batch: 0 elements
   ▿ tail: 3 elements
-    ▿ (2 elements)
+    ▿ (4 elements)
+      - message: ""
+      ▿ action: Optional(BoundariesTests.CounterAction.incr)
+        - some: BoundariesTests.CounterAction.incr
       ▿ state: BoundariesTests.CounterState
         - count: 1
       ▿ effect: Boundaries.Effect<BoundariesTests.CounterAction>._execute
@@ -13,7 +18,10 @@
           - .0: "Print"
           - .1: "incr"
           - .2: (Function)
-    ▿ (2 elements)
+    ▿ (4 elements)
+      - message: ""
+      ▿ action: Optional(BoundariesTests.CounterAction.incr)
+        - some: BoundariesTests.CounterAction.incr
       ▿ state: BoundariesTests.CounterState
         - count: 2
       ▿ effect: Boundaries.Effect<BoundariesTests.CounterAction>._execute
@@ -21,7 +29,10 @@
           - .0: "Print"
           - .1: "incr"
           - .2: (Function)
-    ▿ (2 elements)
+    ▿ (4 elements)
+      - message: ""
+      ▿ action: Optional(BoundariesTests.CounterAction.decr)
+        - some: BoundariesTests.CounterAction.decr
       ▿ state: BoundariesTests.CounterState
         - count: 1
       ▿ effect: Boundaries.Effect<BoundariesTests.CounterAction>._execute

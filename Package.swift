@@ -18,7 +18,7 @@ let package = Package(
       dependencies: ["Optics", "Prelude"]),
     .target(
       name: "BoundariesTestSupport",
-      dependencies: ["NonEmpty", "Boundaries"]),
+      dependencies: ["Boundaries", "NonEmpty", "SnapshotTesting"]),
     .testTarget(
       name: "BoundariesTests",
       dependencies: ["Boundaries", "BoundariesTestSupport", "SnapshotTesting"]),

@@ -8,7 +8,7 @@ public enum Effect<A> {
 
   public static func execute(
     fingerprint: Any = "\(#file):\(#line):\(#function)",
-    _ callback: @escaping ((A) -> ()) -> ())
+    _ callback: @escaping (@escaping (A) -> ()) -> ())
     -> Effect {
 
       return ._execute(fingerprint, callback)

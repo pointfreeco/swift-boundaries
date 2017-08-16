@@ -9,7 +9,7 @@ let package = Package(
     .library(name: "BoundariesTestSupport", targets: ["BoundariesTestSupport"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/pointfreeco/swift-prelude.git", .revision("4c03ccd")),
+    .package(url: "https://github.com/pointfreeco/swift-prelude.git", .revision("06e745a")),
     .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", .revision("2c2b390")),
   ],
   targets: [
@@ -18,7 +18,7 @@ let package = Package(
       dependencies: ["Optics", "Prelude"]),
     .target(
       name: "BoundariesTestSupport",
-      dependencies: ["NonEmpty", "Boundaries"]),
+      dependencies: ["Boundaries", "NonEmpty", "SnapshotTesting"]),
     .testTarget(
       name: "BoundariesTests",
       dependencies: ["Boundaries", "BoundariesTestSupport", "SnapshotTesting"]),

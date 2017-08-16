@@ -16,7 +16,7 @@ final class BoundariesTests: XCTestCase {
     store.dispatch(.incr)
     store.dispatch(.decr)
 
-    assertSnapshot(matching: store.history)
+    assertSnapshot(matching: store)
   }
 
   func testCombinedBoundaries() {
@@ -29,7 +29,7 @@ final class BoundariesTests: XCTestCase {
     store.dispatch(.counterAction(.decr))
     store.dispatch(.settingsAction(.logout))
 
-    assertSnapshot(matching: store.history)
+    assertSnapshot(matching: store)
   }
 }
 

@@ -1,5 +1,5 @@
-▿ NonEmpty.NonEmptyArray<(message: Swift.String, action: Swift.Optional<BoundariesTests.AppAction>, state: BoundariesTests.AppState, effect: Boundaries.Effect<BoundariesTests.AppAction>)>
-  ▿ head: (4 elements)
+▿ 4 elements
+  ▿ (4 elements)
     - message: "TestStore.init"
     - action: nil
     ▿ state: BoundariesTests.AppState
@@ -8,57 +8,56 @@
       - loggedIn: true
     ▿ effect: Boundaries.Effect<BoundariesTests.AppAction>.batch
       - batch: 0 elements
-  ▿ tail: 3 elements
-    ▿ (4 elements)
-      - message: ""
-      ▿ action: Optional(BoundariesTests.AppAction.counterAction(BoundariesTests.CounterAction.incr))
-        ▿ some: BoundariesTests.AppAction.counterAction
-          - counterAction: BoundariesTests.CounterAction.incr
-      ▿ state: BoundariesTests.AppState
-        ▿ counter: BoundariesTests.CounterState
-          - count: 1
-        - loggedIn: true
-      ▿ effect: Boundaries.Effect<BoundariesTests.AppAction>.sequence
-        ▿ sequence: 2 elements
-          ▿ Boundaries.Effect<BoundariesTests.AppAction>.batch
-            - batch: 0 elements
-          ▿ Boundaries.Effect<BoundariesTests.AppAction>._execute
-            ▿ _execute: (3 elements)
-              - .0: "Print"
-              - .1: "incr"
-              - .2: (Function)
-    ▿ (4 elements)
-      - message: ""
-      ▿ action: Optional(BoundariesTests.AppAction.counterAction(BoundariesTests.CounterAction.decr))
-        ▿ some: BoundariesTests.AppAction.counterAction
-          - counterAction: BoundariesTests.CounterAction.decr
-      ▿ state: BoundariesTests.AppState
-        ▿ counter: BoundariesTests.CounterState
-          - count: 0
-        - loggedIn: true
-      ▿ effect: Boundaries.Effect<BoundariesTests.AppAction>.sequence
-        ▿ sequence: 2 elements
-          ▿ Boundaries.Effect<BoundariesTests.AppAction>.batch
-            - batch: 0 elements
-          ▿ Boundaries.Effect<BoundariesTests.AppAction>._execute
-            ▿ _execute: (3 elements)
-              - .0: "Print"
-              - .1: "decr"
-              - .2: (Function)
-    ▿ (4 elements)
-      - message: ""
-      ▿ action: Optional(BoundariesTests.AppAction.settingsAction)
-        - some: BoundariesTests.AppAction.settingsAction
-      ▿ state: BoundariesTests.AppState
-        ▿ counter: BoundariesTests.CounterState
-          - count: 0
-        - loggedIn: false
-      ▿ effect: Boundaries.Effect<BoundariesTests.AppAction>.sequence
-        ▿ sequence: 2 elements
-          ▿ Boundaries.Effect<BoundariesTests.AppAction>._execute
-            ▿ _execute: (3 elements)
-              - .0: "Clear Cache"
-              - .1: Prelude.Unit
-              - .2: (Function)
-          ▿ Boundaries.Effect<BoundariesTests.AppAction>.batch
-            - batch: 0 elements
+  ▿ (4 elements)
+    - message: ""
+    ▿ action: Optional(BoundariesTests.AppAction.counterAction(BoundariesTests.CounterAction.incr))
+      ▿ some: BoundariesTests.AppAction.counterAction
+        - counterAction: BoundariesTests.CounterAction.incr
+    ▿ state: BoundariesTests.AppState
+      ▿ counter: BoundariesTests.CounterState
+        - count: 1
+      - loggedIn: true
+    ▿ effect: Boundaries.Effect<BoundariesTests.AppAction>.sequence
+      ▿ sequence: 2 elements
+        ▿ Boundaries.Effect<BoundariesTests.AppAction>.batch
+          - batch: 0 elements
+        ▿ Boundaries.Effect<BoundariesTests.AppAction>._execute
+          ▿ _execute: (3 elements)
+            - .0: "Print"
+            - .1: "incr"
+            - .2: (Function)
+  ▿ (4 elements)
+    - message: ""
+    ▿ action: Optional(BoundariesTests.AppAction.counterAction(BoundariesTests.CounterAction.decr))
+      ▿ some: BoundariesTests.AppAction.counterAction
+        - counterAction: BoundariesTests.CounterAction.decr
+    ▿ state: BoundariesTests.AppState
+      ▿ counter: BoundariesTests.CounterState
+        - count: 0
+      - loggedIn: true
+    ▿ effect: Boundaries.Effect<BoundariesTests.AppAction>.sequence
+      ▿ sequence: 2 elements
+        ▿ Boundaries.Effect<BoundariesTests.AppAction>.batch
+          - batch: 0 elements
+        ▿ Boundaries.Effect<BoundariesTests.AppAction>._execute
+          ▿ _execute: (3 elements)
+            - .0: "Print"
+            - .1: "decr"
+            - .2: (Function)
+  ▿ (4 elements)
+    - message: ""
+    ▿ action: Optional(BoundariesTests.AppAction.settingsAction)
+      - some: BoundariesTests.AppAction.settingsAction
+    ▿ state: BoundariesTests.AppState
+      ▿ counter: BoundariesTests.CounterState
+        - count: 0
+      - loggedIn: false
+    ▿ effect: Boundaries.Effect<BoundariesTests.AppAction>.sequence
+      ▿ sequence: 2 elements
+        ▿ Boundaries.Effect<BoundariesTests.AppAction>._execute
+          ▿ _execute: (3 elements)
+            - .0: "Clear Cache"
+            - .1: Prelude.Unit
+            - .2: (Function)
+        ▿ Boundaries.Effect<BoundariesTests.AppAction>.batch
+          - batch: 0 elements

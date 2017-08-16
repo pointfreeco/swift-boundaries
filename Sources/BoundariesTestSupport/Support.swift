@@ -26,7 +26,7 @@ extension TestStore: Snapshot {
 
   public var snapshotFormat: String {
     var format = ""
-    dump(self.history, to: &format)
+    dump(Array(self.history), to: &format)
     return format
   }
 }

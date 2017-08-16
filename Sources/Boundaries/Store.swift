@@ -19,6 +19,8 @@ public final class Store<S, A> {
 
   public func interpret(_ effect: Effect<A>) {
     switch effect {
+    case let ._execute(_, f):
+      f(self.dispatch)
     case let .batch(effects):
       // TODO: execute actions in order
       effects.forEach { e in
@@ -28,8 +30,6 @@ public final class Store<S, A> {
       }
     case let .dispatch(action):
       self.dispatch(action)
-    case let ._execute(_, arg, f):
-      if let action = f(arg) { self.dispatch(action) }
     case let .sequence(effects):
       effects.forEach(self.interpret)
     }

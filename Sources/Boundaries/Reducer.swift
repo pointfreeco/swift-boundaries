@@ -11,37 +11,36 @@ public struct Prism<A, B> {
   }
 }
 
-public struct Reducer<S, A> {
-  public let reduce: (A, S) -> (S, Effect<A>)
+public struct Reducer<S, A, E: EffectProtocol> {
+  public let reduce: (A, S) -> (S, Cmd<E>)
 
-  public init(_ reduce: @escaping (A, S) -> (S, Effect<A>)) {
+  public init(_ reduce: @escaping (A, S) -> (S, Cmd<E>)) {
     self.reduce = reduce
   }
 
-  public func lift<B>(action prism: Prism<B, A>) -> Reducer<S, B> {
+  public func lift<B>(action prism: Prism<B, A>) -> Reducer<S, B, E> {
     return .init { actionB, state in
       prism
         .preview(actionB)
-        .map { self.reduce($0, state) |> second(map(prism.review)) }
+        .map { actionA in self.reduce(actionA, state) }
         ?? (state, .noop)
     }
   }
 
-  public func lift<T>(state keyPath: WritableKeyPath<T, S>) -> Reducer<T, A> {
-    return Reducer<T, A> { action, stateT in
-      let stateS = stateT .^ keyPath
-      let (newStateS, effect) = self.reduce(action, stateS)
+  public func lift<T>(state keyPath: WritableKeyPath<T, S>) -> Reducer<T, A, E> {
+    return .init { action, stateT in
+      let (newStateS, effect) = self.reduce(action, stateT .^ keyPath)
       return (stateT |> keyPath .~ newStateS, effect)
     }
   }
 
-  public func lift<T, B>(action prism: Prism<B, A>, state keyPath: WritableKeyPath<T, S>) -> Reducer<T, B> {
+  public func lift<T, B>(action prism: Prism<B, A>, state keyPath: WritableKeyPath<T, S>) -> Reducer<T, B, E> {
     return self.lift(action: prism).lift(state: keyPath)
   }
 }
 
 extension Reducer: Monoid {
-  public static var empty: Reducer<S, A> {
+  public static var empty: Reducer<S, A, E> {
     return .init { _, state in (state, .noop) }
   }
 

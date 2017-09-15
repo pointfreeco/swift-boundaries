@@ -1,9 +1,12 @@
 import Dispatch
+import Foundation
 import Optics
 import Prelude
 
-public final class Store<S, A> {
-  let reducer: Reducer<S, A>
+public final class Store<S, E: EffectProtocol> {
+  public typealias A = E.A
+
+  let reducer: Reducer<S, A, E>
 
   var subscribers: [(S) -> Void] = []
   var currentState: S {
@@ -12,27 +15,9 @@ public final class Store<S, A> {
     }
   }
 
-  public init(reducer: Reducer<S, A>, initialState: S) {
+  public init(reducer: Reducer<S, A, E>, initialState: S) {
     self.reducer = reducer
     self.currentState = initialState
-  }
-
-  public func interpret(_ effect: Effect<A>) {
-    switch effect {
-    case let ._execute(_, f):
-      f(self.dispatch)
-    case let .batch(effects):
-      // TODO: execute actions in order
-      effects.forEach { e in
-        DispatchQueue.global(qos: .userInitiated).async {
-          self.interpret(e)
-        }
-      }
-    case let .dispatch(action):
-      self.dispatch(action)
-    case let .sequence(effects):
-      effects.forEach(self.interpret)
-    }
   }
 
   public func dispatch(_ action: A) {
@@ -51,5 +36,74 @@ public final class Store<S, A> {
 
   public func subscribe<T>(state keyPath: KeyPath<S, T>, _ subscriber: @escaping (T) -> Void) {
     self.subscribe(subscriber <<< view(getting(keyPath)))
+  }
+
+  // Executes the effect
+  private func interpret(_ effect: Cmd<E>) {
+    switch effect {
+    case let ._execute(_, f):
+      if let action = f.execute() {
+        self.dispatch(action)
+      }
+
+    case .batch:
+      catOptionals(self.interpretedActions(effect))
+        .forEach(self.dispatch)
+
+    case let .dispatch(action):
+      self.dispatch(action)
+
+    case let .sequence(effects):
+      effects.forEach(self.interpret)
+    }
+  }
+
+  // Runs the effects and collects all of the resulting actions without dispatching them.
+  private func interpretedActions(_ effect: Cmd<E>) -> [A?] {
+    switch effect {
+    case let ._execute(_, f):
+      return [f.execute()]
+
+    case let .batch(effects):
+      return effects.pmap(self.interpretedActions).flatMap(id)
+
+    case let .dispatch(action):
+      return [action]
+
+    case let .sequence(effects):
+      return effects.flatMap(self.interpretedActions)
+    }
+  }
+}
+
+extension Array {
+  public func pmap<T>(_ f: @escaping (Iterator.Element) -> T) -> [T] {
+    guard !self.isEmpty else { return [] }
+
+    var result: [Int: [T]] = [:]
+
+    let coreCount = ProcessInfo.processInfo.activeProcessorCount
+    let sampleSize = Int(ceil(Double(self.count) / Double(coreCount)))
+
+    let group = DispatchGroup()
+
+    (0..<sampleSize).forEach { idx in
+
+      let startIndex = idx * coreCount
+      let endIndex = Swift.min((startIndex + (coreCount - 1)), self.count - 1)
+      result[startIndex] = []
+
+      group.enter()
+      DispatchQueue.global().async {
+        (startIndex...endIndex).forEach { idx in
+          result[startIndex]?.append(f(self[idx]))
+        }
+        group.leave()
+      }
+    }
+
+    group.wait()
+
+    return result.sorted(by: { $0.0 < $1.0 }).flatMap(second)
   }
 }

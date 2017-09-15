@@ -2,11 +2,13 @@ import Boundaries
 import NonEmpty
 import SnapshotTesting
 
-public final class TestStore<S, A> {
-  public let reducer: Reducer<S, A>
-  public private(set) var history: NonEmptyArray<(message: String, action: A?, state: S, effect: Effect<A>)>
+public final class TestStore<S, E: EffectProtocol> {
+  public typealias A = E.A
 
-  public init(reducer: Reducer<S, A>, initialState: S) {
+  public let reducer: Reducer<S, A, E>
+  public private(set) var history: NonEmptyArray<(message: String, action: A?, state: S, effect: Cmd<E>)>
+
+  public init(reducer: Reducer<S, A, E>, initialState: S) {
     self.reducer = reducer
     self.history = ("TestStore.init", nil, initialState, .batch([])) >| []
   }
@@ -26,7 +28,7 @@ extension TestStore: Snapshot {
 
   public var snapshotFormat: String {
     var format = ""
-    dump(Array(self.history), to: &format)
+    dump([self.history.head] + self.history.tail, to: &format)
     return format
   }
 }

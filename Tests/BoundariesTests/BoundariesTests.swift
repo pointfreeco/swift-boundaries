@@ -6,15 +6,20 @@ import Prelude
 import SnapshotTesting
 
 final class BoundariesTests: XCTestCase {
+  override func setUp() {
+    super.setUp()
+    recording = true
+  }
+
   func testBoundaries() {
-    let store = TestStore(
-      reducer: counterReducer,
+    let store = TestStore<CounterState, TestEffect<AppAction>>(
+      reducer: counterReducer.lift(action: AppAction.prism.counterAction),
       initialState: .init(count: 0)
     )
 
-    store.dispatch(.incr)
-    store.dispatch(.incr)
-    store.dispatch(.decr)
+    store.dispatch(.counterAction(.incr))
+    store.dispatch(.counterAction(.incr))
+    store.dispatch(.counterAction(.decr))
 
     assertSnapshot(matching: store)
   }
@@ -33,10 +38,6 @@ final class BoundariesTests: XCTestCase {
   }
 }
 
-func print<A>(_ string: String) -> Effect<A> {
-  return .execute(fingerprint: [#function, string]) { _ in print(string) }
-}
-
 struct CounterState {
   var count: Int
 }
@@ -46,12 +47,13 @@ enum CounterAction {
   case decr
 }
 
-let counterReducer = Reducer<CounterState, CounterAction> { action, state in
+let counterReducer = Reducer<CounterState, CounterAction, TestEffect<AppAction>> { action, state in
   switch action {
   case .incr:
-    return (state |> \.count +~ 1, print("incr"))
+    return (state |> \.count +~ 1, .execute(fingerprint: "", .print("incr")))
+
   case .decr:
-    return (state |> \.count -~ 1, print("decr"))
+    return (state |> \.count -~ 1, .execute(fingerprint: "", .print("decr")))
   }
 }
 
@@ -63,12 +65,13 @@ enum SettingsAction {
   case logout
 }
 
-let settingsReducer = Reducer<SettingsState, SettingsAction> { action, state in
+let settingsReducer = Reducer<SettingsState, SettingsAction, TestEffect<AppAction>> { action, state in
+
   switch action {
   case .logout:
     return (
       .init(loggedIn: false),
-      .execute(fingerprint: "Clear Cache") { _ in }
+      .noop
     )
   }
 }
@@ -108,6 +111,18 @@ enum AppAction {
   }
 }
 
-let combinedReducer: Reducer<AppState, AppAction> =
+enum TestEffect<A>: EffectProtocol {
+  case print(String)
+
+  func execute() -> A? {
+    switch self {
+    case let .print(message):
+      Swift.print(message)
+      return nil
+    }
+  }
+}
+
+let combinedReducer: Reducer<AppState, AppAction, TestEffect<AppAction>> =
   settingsReducer.lift(action: AppAction.prism.settingsAction, state: \.settingsState)
     <> counterReducer.lift(action: AppAction.prism.counterAction, state: \.counter)

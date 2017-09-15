@@ -8,7 +8,8 @@
       - batch: 0 elements
   ▿ (4 elements)
     - message: ""
-    - action: "▿ BoundariesTests.AppAction.counterAction\n  - counterAction: BoundariesTests.CounterAction.incr\n"
+    ▿ action: BoundariesTests.AppAction.counterAction
+      - counterAction: BoundariesTests.CounterAction.incr
     ▿ state: BoundariesTests.CounterState
       - count: 1
     ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect<BoundariesTests.AppAction>>.execute
@@ -16,7 +17,8 @@
         - print: "incr"
   ▿ (4 elements)
     - message: ""
-    - action: "▿ BoundariesTests.AppAction.counterAction\n  - counterAction: BoundariesTests.CounterAction.incr\n"
+    ▿ action: BoundariesTests.AppAction.counterAction
+      - counterAction: BoundariesTests.CounterAction.incr
     ▿ state: BoundariesTests.CounterState
       - count: 2
     ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect<BoundariesTests.AppAction>>.execute
@@ -24,7 +26,8 @@
         - print: "incr"
   ▿ (4 elements)
     - message: ""
-    - action: "▿ BoundariesTests.AppAction.counterAction\n  - counterAction: BoundariesTests.CounterAction.decr\n"
+    ▿ action: BoundariesTests.AppAction.counterAction
+      - counterAction: BoundariesTests.CounterAction.decr
     ▿ state: BoundariesTests.CounterState
       - count: 1
     ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect<BoundariesTests.AppAction>>.execute

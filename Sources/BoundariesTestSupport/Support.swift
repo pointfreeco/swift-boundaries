@@ -6,7 +6,7 @@ public final class TestStore<S, E: EffectProtocol> {
   public typealias A = E.A
 
   public let reducer: Reducer<S, A, E>
-  public private(set) var history: NonEmptyArray<(message: String, action: String, state: S, effect: Cmd<E>)>
+  public private(set) var history: NonEmptyArray<(message: String, action: Any, state: S, effect: Cmd<E>)>
 
   public init(reducer: Reducer<S, A, E>, initialState: S) {
     self.reducer = reducer
@@ -15,7 +15,7 @@ public final class TestStore<S, E: EffectProtocol> {
 
   public func dispatch(_ action: A, _ message: String = "") {
     let (state, effect) = self.reducer.reduce(action, self.history.last.state)
-    self.history.append((message, dumped(action), state, effect))
+    self.history.append((message, action, state, effect))
   }
 
   public func dispatch<B>(_ action: B, _ prism: Prism<A, B>, message: String = "") {
@@ -31,10 +31,4 @@ extension TestStore: Snapshot {
     dump([self.history.head] + self.history.tail, to: &format)
     return format
   }
-}
-
-private func dumped<A>(_ x: A) -> String {
-  var output = ""
-  dump(x, to: &output)
-  return output
 }

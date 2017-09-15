@@ -1,4 +1,4 @@
-▿ 4 elements
+▿ 5 elements
   ▿ (4 elements)
     - message: "TestStore.init"
     - action: "init"
@@ -6,7 +6,7 @@
       ▿ counter: BoundariesTests.CounterState
         - count: 0
       - loggedIn: true
-    ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect<BoundariesTests.AppAction>>.batch
+    ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect>.batch
       - batch: 0 elements
   ▿ (4 elements)
     - message: ""
@@ -16,12 +16,12 @@
       ▿ counter: BoundariesTests.CounterState
         - count: 1
       - loggedIn: true
-    ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect<BoundariesTests.AppAction>>.sequence
+    ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect>.sequence
       ▿ sequence: 2 elements
-        ▿ Boundaries.Cmd<BoundariesTests.TestEffect<BoundariesTests.AppAction>>.batch
+        ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.batch
           - batch: 0 elements
-        ▿ Boundaries.Cmd<BoundariesTests.TestEffect<BoundariesTests.AppAction>>.execute
-          ▿ execute: BoundariesTests.TestEffect<BoundariesTests.AppAction>.print
+        ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.execute
+          ▿ execute: BoundariesTests.TestEffect.print
             - print: "incr"
   ▿ (4 elements)
     - message: ""
@@ -31,12 +31,12 @@
       ▿ counter: BoundariesTests.CounterState
         - count: 0
       - loggedIn: true
-    ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect<BoundariesTests.AppAction>>.sequence
+    ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect>.sequence
       ▿ sequence: 2 elements
-        ▿ Boundaries.Cmd<BoundariesTests.TestEffect<BoundariesTests.AppAction>>.batch
+        ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.batch
           - batch: 0 elements
-        ▿ Boundaries.Cmd<BoundariesTests.TestEffect<BoundariesTests.AppAction>>.execute
-          ▿ execute: BoundariesTests.TestEffect<BoundariesTests.AppAction>.print
+        ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.execute
+          ▿ execute: BoundariesTests.TestEffect.print
             - print: "decr"
   ▿ (4 elements)
     - message: ""
@@ -45,9 +45,24 @@
       ▿ counter: BoundariesTests.CounterState
         - count: 0
       - loggedIn: false
-    ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect<BoundariesTests.AppAction>>.sequence
+    ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect>.sequence
       ▿ sequence: 2 elements
-        ▿ Boundaries.Cmd<BoundariesTests.TestEffect<BoundariesTests.AppAction>>.batch
+        ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.execute
+          ▿ execute: BoundariesTests.TestEffect.request
+            - request: "http://www.google.com"
+        ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.batch
           - batch: 0 elements
-        ▿ Boundaries.Cmd<BoundariesTests.TestEffect<BoundariesTests.AppAction>>.batch
+  ▿ (4 elements)
+    - message: ""
+    ▿ action: BoundariesTests.AppAction.requestResult
+      - requestResult: "http://www.google.com: HELLO WORLD!"
+    ▿ state: BoundariesTests.AppState
+      ▿ counter: BoundariesTests.CounterState
+        - count: 0
+      - loggedIn: false
+    ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect>.sequence
+      ▿ sequence: 2 elements
+        ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.batch
+          - batch: 0 elements
+        ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.batch
           - batch: 0 elements

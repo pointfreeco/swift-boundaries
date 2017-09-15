@@ -7,6 +7,7 @@ public final class TestStore<S, E: EffectProtocol> {
 
   public let reducer: Reducer<S, A, E>
   public private(set) var history: NonEmptyArray<(message: String, action: Any, state: S, effect: Cmd<E>)>
+  public var currentState: S { return self.history.last.state }
 
   public init(reducer: Reducer<S, A, E>, initialState: S) {
     self.reducer = reducer
@@ -16,10 +17,29 @@ public final class TestStore<S, E: EffectProtocol> {
   public func dispatch(_ action: A, _ message: String = "") {
     let (state, effect) = self.reducer.reduce(action, self.history.last.state)
     self.history.append((message, action, state, effect))
+    self.interpret(effect)
   }
 
   public func dispatch<B>(_ action: B, _ prism: Prism<A, B>, message: String = "") {
     self.dispatch(prism.review(action), message)
+  }
+
+  private func interpret(_ effect: Cmd<E>) {
+    switch effect {
+    case let .execute(e):
+      if let action = e.execute() {
+        self.dispatch(action)
+      }
+
+    case let .batch(effects):
+      effects.forEach(self.interpret)
+
+    case let .dispatch(action):
+      self.dispatch(action)
+
+    case let .sequence(effects):
+      effects.forEach(self.interpret)
+    }
   }
 }
 

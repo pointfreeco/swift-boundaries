@@ -12,7 +12,7 @@ final class BoundariesTests: XCTestCase {
   }
 
   func testBoundaries() {
-    let store = TestStore<CounterState, TestEffect<AppAction>>(
+    let store = TestStore<CounterState, TestEffect>(
       reducer: counterReducer.lift(action: AppAction.prism.counterAction),
       initialState: .init(count: 0)
     )
@@ -47,7 +47,7 @@ enum CounterAction {
   case decr
 }
 
-let counterReducer = Reducer<CounterState, CounterAction, TestEffect<AppAction>> { action, state in
+let counterReducer = Reducer<CounterState, CounterAction, TestEffect> { action, state in
   switch action {
   case .incr:
     return (state |> \.count +~ 1, .execute(.print("incr")))
@@ -65,13 +65,13 @@ enum SettingsAction {
   case logout
 }
 
-let settingsReducer = Reducer<SettingsState, SettingsAction, TestEffect<AppAction>> { action, state in
+let settingsReducer = Reducer<SettingsState, SettingsAction, TestEffect> { action, state in
 
   switch action {
   case .logout:
     return (
       .init(loggedIn: false),
-      .noop
+      .execute(.request("http://www.google.com"))
     )
   }
 }
@@ -89,6 +89,7 @@ struct AppState {
 enum AppAction {
   case counterAction(CounterAction)
   case settingsAction(SettingsAction)
+  case requestResult(String)
 
   enum prism {
     static var counterAction: Prism<AppAction, CounterAction> {
@@ -111,18 +112,29 @@ enum AppAction {
   }
 }
 
-enum TestEffect<A>: EffectProtocol {
+enum TestEffect: EffectProtocol {
+  typealias A = AppAction
+
   case print(String)
+  case request(String)
 
   func execute() -> A? {
     switch self {
     case let .print(message):
       Swift.print(message)
       return nil
+
+    case let .request(urlRequestString):
+
+      let sema = DispatchSemaphore(value: 0)
+      DispatchQueue.global().asyncAfter(deadline: .now() + 1) { sema.signal() }
+      sema.wait()
+
+      return AppAction.requestResult("\(urlRequestString): HELLO WORLD!")
     }
   }
 }
 
-let combinedReducer: Reducer<AppState, AppAction, TestEffect<AppAction>> =
+let combinedReducer: Reducer<AppState, AppAction, TestEffect> =
   settingsReducer.lift(action: AppAction.prism.settingsAction, state: \.settingsState)
     <> counterReducer.lift(action: AppAction.prism.counterAction, state: \.counter)

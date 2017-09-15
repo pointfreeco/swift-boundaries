@@ -1,7 +1,7 @@
 ▿ 4 elements
   ▿ (4 elements)
     - message: "TestStore.init"
-    - action: nil
+    - action: "init"
     ▿ state: BoundariesTests.AppState
       ▿ counter: BoundariesTests.CounterState
         - count: 0
@@ -10,9 +10,7 @@
       - batch: 0 elements
   ▿ (4 elements)
     - message: ""
-    ▿ action: Optional(BoundariesTests.AppAction.counterAction(BoundariesTests.CounterAction.incr))
-      ▿ some: BoundariesTests.AppAction.counterAction
-        - counterAction: BoundariesTests.CounterAction.incr
+    - action: "▿ BoundariesTests.AppAction.counterAction\n  - counterAction: BoundariesTests.CounterAction.incr\n"
     ▿ state: BoundariesTests.AppState
       ▿ counter: BoundariesTests.CounterState
         - count: 1
@@ -26,9 +24,7 @@
             - print: "incr"
   ▿ (4 elements)
     - message: ""
-    ▿ action: Optional(BoundariesTests.AppAction.counterAction(BoundariesTests.CounterAction.decr))
-      ▿ some: BoundariesTests.AppAction.counterAction
-        - counterAction: BoundariesTests.CounterAction.decr
+    - action: "▿ BoundariesTests.AppAction.counterAction\n  - counterAction: BoundariesTests.CounterAction.decr\n"
     ▿ state: BoundariesTests.AppState
       ▿ counter: BoundariesTests.CounterState
         - count: 0
@@ -42,8 +38,7 @@
             - print: "decr"
   ▿ (4 elements)
     - message: ""
-    ▿ action: Optional(BoundariesTests.AppAction.settingsAction)
-      - some: BoundariesTests.AppAction.settingsAction
+    - action: "- BoundariesTests.AppAction.settingsAction\n"
     ▿ state: BoundariesTests.AppState
       ▿ counter: BoundariesTests.CounterState
         - count: 0

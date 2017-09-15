@@ -8,7 +8,7 @@ import SnapshotTesting
 final class BoundariesTests: XCTestCase {
   override func setUp() {
     super.setUp()
-    recording = true
+//    recording = true
   }
 
   func testBoundaries() {

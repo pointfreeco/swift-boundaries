@@ -13,11 +13,9 @@
         - counterAction: BoundariesTests.CounterAction.incr
     ▿ state: BoundariesTests.CounterState
       - count: 1
-    ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect<BoundariesTests.AppAction>>._execute
-      ▿ _execute: (2 elements)
-        - .0: ""
-        ▿ .1: BoundariesTests.TestEffect<BoundariesTests.AppAction>.print
-          - print: "incr"
+    ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect<BoundariesTests.AppAction>>.execute
+      ▿ execute: BoundariesTests.TestEffect<BoundariesTests.AppAction>.print
+        - print: "incr"
   ▿ (4 elements)
     - message: ""
     ▿ action: Optional(BoundariesTests.AppAction.counterAction(BoundariesTests.CounterAction.incr))
@@ -25,11 +23,9 @@
         - counterAction: BoundariesTests.CounterAction.incr
     ▿ state: BoundariesTests.CounterState
       - count: 2
-    ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect<BoundariesTests.AppAction>>._execute
-      ▿ _execute: (2 elements)
-        - .0: ""
-        ▿ .1: BoundariesTests.TestEffect<BoundariesTests.AppAction>.print
-          - print: "incr"
+    ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect<BoundariesTests.AppAction>>.execute
+      ▿ execute: BoundariesTests.TestEffect<BoundariesTests.AppAction>.print
+        - print: "incr"
   ▿ (4 elements)
     - message: ""
     ▿ action: Optional(BoundariesTests.AppAction.counterAction(BoundariesTests.CounterAction.decr))
@@ -37,8 +33,6 @@
         - counterAction: BoundariesTests.CounterAction.decr
     ▿ state: BoundariesTests.CounterState
       - count: 1
-    ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect<BoundariesTests.AppAction>>._execute
-      ▿ _execute: (2 elements)
-        - .0: ""
-        ▿ .1: BoundariesTests.TestEffect<BoundariesTests.AppAction>.print
-          - print: "decr"
+    ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect<BoundariesTests.AppAction>>.execute
+      ▿ execute: BoundariesTests.TestEffect<BoundariesTests.AppAction>.print
+        - print: "decr"

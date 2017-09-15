@@ -38,6 +38,10 @@ final class BoundariesTests: XCTestCase {
   }
 }
 
+func print<A>(_ string: String) -> Cmd<TestEffect<A>> {
+  return Cmd.execute(fingerprint: "print: \(string)", .print(string))
+}
+
 struct CounterState {
   var count: Int
 }
@@ -50,10 +54,10 @@ enum CounterAction {
 let counterReducer = Reducer<CounterState, CounterAction, TestEffect<AppAction>> { action, state in
   switch action {
   case .incr:
-    return (state |> \.count +~ 1, .execute(fingerprint: "", .print("incr")))
+    return (state |> \.count +~ 1, print("incr"))
 
   case .decr:
-    return (state |> \.count -~ 1, .execute(fingerprint: "", .print("decr")))
+    return (state |> \.count -~ 1, print("decr"))
   }
 }
 

@@ -41,8 +41,8 @@ public final class Store<S, E: EffectProtocol> {
   // Executes the effect
   private func interpret(_ effect: Cmd<E>) {
     switch effect {
-    case let ._execute(_, f):
-      if let action = f.execute() {
+    case let .execute(e):
+      if let action = e.execute() {
         self.dispatch(action)
       }
 
@@ -61,8 +61,8 @@ public final class Store<S, E: EffectProtocol> {
   // Runs the effects and collects all of the resulting actions without dispatching them.
   private func interpretedActions(_ effect: Cmd<E>) -> [A?] {
     switch effect {
-    case let ._execute(_, f):
-      return [f.execute()]
+    case let .execute(e):
+      return [e.execute()]
 
     case let .batch(effects):
       return effects.pmap(self.interpretedActions).flatMap(id)

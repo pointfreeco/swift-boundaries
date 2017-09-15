@@ -8,7 +8,7 @@ import SnapshotTesting
 final class BoundariesTests: XCTestCase {
   override func setUp() {
     super.setUp()
-    recording = true
+//    recording = true
   }
 
   func testBoundaries() {
@@ -38,10 +38,6 @@ final class BoundariesTests: XCTestCase {
   }
 }
 
-func print<A>(_ string: String) -> Cmd<TestEffect<A>> {
-  return Cmd.execute(fingerprint: "print: \(string)", .print(string))
-}
-
 struct CounterState {
   var count: Int
 }
@@ -54,10 +50,10 @@ enum CounterAction {
 let counterReducer = Reducer<CounterState, CounterAction, TestEffect<AppAction>> { action, state in
   switch action {
   case .incr:
-    return (state |> \.count +~ 1, print("incr"))
+    return (state |> \.count +~ 1, .execute(.print("incr")))
 
   case .decr:
-    return (state |> \.count -~ 1, print("decr"))
+    return (state |> \.count -~ 1, .execute(.print("decr")))
   }
 }
 

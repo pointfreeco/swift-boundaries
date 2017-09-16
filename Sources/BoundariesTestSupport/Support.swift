@@ -6,12 +6,16 @@ public final class TestStore<S, E: EffectProtocol> {
   public typealias A = E.A
 
   public let reducer: Reducer<S, A, E>
+  public let execute: (E) -> A?
+
   public private(set) var history: NonEmptyArray<(message: String, action: Any, state: S, effect: Cmd<E>)>
+
   public var currentState: S { return self.history.last.state }
 
-  public init(reducer: Reducer<S, A, E>, initialState: S) {
+  public init(reducer: Reducer<S, A, E>, initialState: S, execute: @escaping (E) -> A?) {
     self.reducer = reducer
     self.history = ("TestStore.init", "init", initialState, .parallel([])) >| []
+    self.execute = execute
   }
 
   public func dispatch(_ action: A, _ message: String = "") {
@@ -27,7 +31,7 @@ public final class TestStore<S, E: EffectProtocol> {
   private func interpret(_ effect: Cmd<E>) {
     switch effect {
     case let .execute(e):
-      if let action = e.execute() {
+      if let action = self.execute(e) {
         self.dispatch(action)
       }
 

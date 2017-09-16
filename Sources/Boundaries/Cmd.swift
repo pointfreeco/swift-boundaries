@@ -3,9 +3,10 @@ import Prelude
 /// A protocol that describes an effect to be performed. `Self` is the description of the effect (typically
 /// an enum with a case for each type of effect supported), and `A` is the resulting action that should
 /// be dispatched back to the store.
+// TODO: CAN THIS GO AWAY?
 public protocol EffectProtocol {
   associatedtype A
-  func execute() -> A?
+  func execute() -> A? // <-- this isnt needed
 }
 
 /// Provides a way of combining effects.

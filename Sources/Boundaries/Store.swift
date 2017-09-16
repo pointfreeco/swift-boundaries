@@ -7,6 +7,7 @@ public final class Store<S, E: EffectProtocol> {
   public typealias A = E.A
 
   let reducer: Reducer<S, A, E>
+  let execute: (E) -> A?
 
   var subscribers: [(S) -> Void] = []
   var currentState: S {
@@ -15,9 +16,10 @@ public final class Store<S, E: EffectProtocol> {
     }
   }
 
-  public init(reducer: Reducer<S, A, E>, initialState: S) {
+  public init(reducer: Reducer<S, A, E>, initialState: S, execute: @escaping (E) -> A?) {
     self.reducer = reducer
     self.currentState = initialState
+    self.execute = execute
   }
 
   public func dispatch(_ action: A) {
@@ -42,7 +44,7 @@ public final class Store<S, E: EffectProtocol> {
   private func interpret(_ effect: Cmd<E>) {
     switch effect {
     case let .execute(e):
-      if let action = e.execute() {
+      if let action = self.execute(e) {
         self.dispatch(action)
       }
 
@@ -62,7 +64,7 @@ public final class Store<S, E: EffectProtocol> {
   private func interpretedActions(_ effect: Cmd<E>) -> [A?] {
     switch effect {
     case let .execute(e):
-      return [e.execute()]
+      return [self.execute(e)]
 
     case let .parallel(effects):
       return effects.pmap(self.interpretedActions).flatMap(id)

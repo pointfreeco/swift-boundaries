@@ -8,13 +8,14 @@ import SnapshotTesting
 final class BoundariesTests: XCTestCase {
   override func setUp() {
     super.setUp()
-//    recording = true
+    recording = true
   }
 
   func testBoundaries() {
-    let store = TestStore<CounterState, TestEffect>(
+    let store = TestStore<CounterState, MyEffect>(
       reducer: counterReducer.lift(action: AppAction.prism.counterAction),
-      initialState: .init(count: 0)
+      initialState: .init(count: 0),
+      execute: testExecute
     )
 
     store.dispatch(.counterAction(.incr))
@@ -27,7 +28,8 @@ final class BoundariesTests: XCTestCase {
   func testCombinedBoundaries() {
     let store = TestStore(
       reducer: combinedReducer,
-      initialState: AppState(counter: .init(count: 0), loggedIn: true)
+      initialState: AppState(counter: .init(count: 0), loggedIn: true),
+      execute: testExecute
     )
 
     store.dispatch(.counterAction(.incr))
@@ -47,7 +49,7 @@ enum CounterAction {
   case decr
 }
 
-let counterReducer = Reducer<CounterState, CounterAction, TestEffect> { action, state in
+let counterReducer = Reducer<CounterState, CounterAction, MyEffect> { action, state in
   switch action {
   case .incr:
     return (state |> \.count +~ 1, .execute(.print("incr")))
@@ -65,7 +67,7 @@ enum SettingsAction {
   case logout
 }
 
-let settingsReducer = Reducer<SettingsState, SettingsAction, TestEffect> { action, state in
+let settingsReducer = Reducer<SettingsState, SettingsAction, MyEffect> { action, state in
 
   switch action {
   case .logout:
@@ -112,29 +114,42 @@ enum AppAction {
   }
 }
 
-enum TestEffect: EffectProtocol {
+enum MyEffect: EffectProtocol {
   typealias A = AppAction
-
   case print(String)
   case request(String)
-
-  func execute() -> A? {
-    switch self {
-    case let .print(message):
-      Swift.print(message)
-      return nil
-
-    case let .request(urlRequestString):
-
-      let sema = DispatchSemaphore(value: 0)
-      DispatchQueue.global().asyncAfter(deadline: .now() + 1) { sema.signal() }
-      sema.wait()
-
-      return AppAction.requestResult("\(urlRequestString): HELLO WORLD!")
-    }
+  func execute() -> AppAction? {
+    return nil
   }
 }
 
-let combinedReducer: Reducer<AppState, AppAction, TestEffect> =
+func testExecute(_ effect: MyEffect) -> AppAction? {
+  switch effect {
+  case .print:
+    return nil
+
+  case let .request(urlRequestString):
+    return AppAction.requestResult("\(urlRequestString): HELLO WORLD!")
+  }
+}
+
+
+func realExecute(_ effect: MyEffect) -> AppAction? {
+  switch effect {
+  case let .print(message):
+    Swift.print(message)
+    return nil
+
+  case let .request(urlRequestString):
+
+    let sema = DispatchSemaphore(value: 0)
+    DispatchQueue.global().asyncAfter(deadline: .now() + 1) { sema.signal() }
+    sema.wait()
+
+    return AppAction.requestResult("\(urlRequestString): HELLO WORLD!")
+  }
+}
+
+let combinedReducer: Reducer<AppState, AppAction, MyEffect> =
   settingsReducer.lift(action: AppAction.prism.settingsAction, state: \.settingsState)
     <> counterReducer.lift(action: AppAction.prism.counterAction, state: \.counter)

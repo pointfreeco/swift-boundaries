@@ -4,8 +4,8 @@
     - action: "init"
     ▿ state: BoundariesTests.CounterState
       - count: 0
-    ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect>.batch
-      - batch: 0 elements
+    ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect>.parallel
+      - parallel: 0 elements
   ▿ (4 elements)
     - message: ""
     ▿ action: BoundariesTests.AppAction.counterAction

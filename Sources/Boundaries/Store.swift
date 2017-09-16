@@ -46,7 +46,7 @@ public final class Store<S, E: EffectProtocol> {
         self.dispatch(action)
       }
 
-    case .batch:
+    case .parallel:
       catOptionals(self.interpretedActions(effect))
         .forEach(self.dispatch)
 
@@ -64,7 +64,7 @@ public final class Store<S, E: EffectProtocol> {
     case let .execute(e):
       return [e.execute()]
 
-    case let .batch(effects):
+    case let .parallel(effects):
       return effects.pmap(self.interpretedActions).flatMap(id)
 
     case let .dispatch(action):
@@ -77,10 +77,18 @@ public final class Store<S, E: EffectProtocol> {
 }
 
 extension Array {
+  // TODO: move to prelude
+
+  /// Performs a parallel map of a transformation over an array. Splits the array into chunks based on the
+  /// number of computing cores.
   public func pmap<T>(_ f: @escaping (Iterator.Element) -> T) -> [T] {
+    return self.pmap(queue: .global(), f)
+  }
+
+  public func pmap<T>(queue: DispatchQueue, _ f: @escaping (Iterator.Element) -> T) -> [T] {
     guard !self.isEmpty else { return [] }
 
-    var result: [Int: [T]] = [:]
+    var result: [Int: [T]] = .init(minimumCapacity: self.count)
 
     let coreCount = ProcessInfo.processInfo.activeProcessorCount
     let sampleSize = Int(ceil(Double(self.count) / Double(coreCount)))
@@ -95,9 +103,7 @@ extension Array {
 
       group.enter()
       DispatchQueue.global().async {
-        (startIndex...endIndex).forEach { idx in
-          result[startIndex]?.append(f(self[idx]))
-        }
+        result[startIndex] = (startIndex...endIndex).map { idx in f(self[idx]) }
         group.leave()
       }
     }

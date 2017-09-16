@@ -11,7 +11,7 @@ public final class TestStore<S, E: EffectProtocol> {
 
   public init(reducer: Reducer<S, A, E>, initialState: S) {
     self.reducer = reducer
-    self.history = ("TestStore.init", "init", initialState, .batch([])) >| []
+    self.history = ("TestStore.init", "init", initialState, .parallel([])) >| []
   }
 
   public func dispatch(_ action: A, _ message: String = "") {
@@ -31,7 +31,7 @@ public final class TestStore<S, E: EffectProtocol> {
         self.dispatch(action)
       }
 
-    case let .batch(effects):
+    case let .parallel(effects):
       effects.forEach(self.interpret)
 
     case let .dispatch(action):

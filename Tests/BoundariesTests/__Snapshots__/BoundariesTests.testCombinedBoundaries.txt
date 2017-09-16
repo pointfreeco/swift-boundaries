@@ -6,8 +6,8 @@
       ▿ counter: BoundariesTests.CounterState
         - count: 0
       - loggedIn: true
-    ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect>.batch
-      - batch: 0 elements
+    ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect>.parallel
+      - parallel: 0 elements
   ▿ (4 elements)
     - message: ""
     ▿ action: BoundariesTests.AppAction.counterAction
@@ -18,8 +18,8 @@
       - loggedIn: true
     ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect>.sequence
       ▿ sequence: 2 elements
-        ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.batch
-          - batch: 0 elements
+        ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.parallel
+          - parallel: 0 elements
         ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.execute
           ▿ execute: BoundariesTests.TestEffect.print
             - print: "incr"
@@ -33,8 +33,8 @@
       - loggedIn: true
     ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect>.sequence
       ▿ sequence: 2 elements
-        ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.batch
-          - batch: 0 elements
+        ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.parallel
+          - parallel: 0 elements
         ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.execute
           ▿ execute: BoundariesTests.TestEffect.print
             - print: "decr"
@@ -50,8 +50,8 @@
         ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.execute
           ▿ execute: BoundariesTests.TestEffect.request
             - request: "http://www.google.com"
-        ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.batch
-          - batch: 0 elements
+        ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.parallel
+          - parallel: 0 elements
   ▿ (4 elements)
     - message: ""
     ▿ action: BoundariesTests.AppAction.requestResult
@@ -62,7 +62,7 @@
       - loggedIn: false
     ▿ effect: Boundaries.Cmd<BoundariesTests.TestEffect>.sequence
       ▿ sequence: 2 elements
-        ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.batch
-          - batch: 0 elements
-        ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.batch
-          - batch: 0 elements
+        ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.parallel
+          - parallel: 0 elements
+        ▿ Boundaries.Cmd<BoundariesTests.TestEffect>.parallel
+          - parallel: 0 elements

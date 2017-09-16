@@ -11,6 +11,8 @@ public struct Prism<A, B> {
   }
 }
 
+/// A reducer is generic of the state `S` it operates on, the actions `A` that can change the state, and
+/// `E` the type of effects that it can emit.
 public struct Reducer<S, A, E: EffectProtocol> {
   public let reduce: (A, S) -> (S, Cmd<E>)
 

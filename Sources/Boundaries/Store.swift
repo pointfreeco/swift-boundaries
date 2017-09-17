@@ -38,6 +38,7 @@ public final class Store<S, E: EffectProtocol> {
 
   public func subscribe(_ subscriber: @escaping (S) -> Void) {
     self.subscribers.append(subscriber)
+    subscriber(self.currentState)
   }
 
   public func subscribe<T>(state keyPath: KeyPath<S, T>, _ subscriber: @escaping (T) -> Void) {

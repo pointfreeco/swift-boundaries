@@ -26,6 +26,7 @@ public final class TestStore<S, E: EffectProtocol> {
 
   public func subscribe(_ subscriber: @escaping (S) -> Void) {
     self.subscribers.append(subscriber)
+    subscriber(self.currentState)
   }
 
   public func dispatch(_ action: A, _ message: String = "") {

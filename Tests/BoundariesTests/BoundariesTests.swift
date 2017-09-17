@@ -6,7 +6,6 @@ import XCTest
 final class BoundariesTests: XCTestCase {
   override func setUp() {
     super.setUp()
-    recording = true
   }
 
   func testBoundaries() {

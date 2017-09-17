@@ -34,6 +34,6 @@ extension Cmd: Monoid {
   public static var empty: Cmd { return .noop }
 
   public static func <> (lhs: Cmd, rhs: Cmd) -> Cmd {
-    return .sequence([lhs, rhs])
+    return .parallel([lhs, rhs])
   }
 }

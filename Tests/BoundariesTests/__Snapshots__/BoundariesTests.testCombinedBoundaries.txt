@@ -20,9 +20,19 @@
       ▿ sequence: 2 elements
         ▿ Boundaries.Cmd<BoundariesTests.MyEffect>.parallel
           - parallel: 0 elements
-        ▿ Boundaries.Cmd<BoundariesTests.MyEffect>.execute
-          ▿ execute: BoundariesTests.MyEffect.print
-            - print: "incr"
+        ▿ Boundaries.Cmd<BoundariesTests.MyEffect>.parallel
+          ▿ parallel: 2 elements
+            ▿ Boundaries.Cmd<BoundariesTests.MyEffect>.execute
+              ▿ execute: BoundariesTests.MyEffect.print
+                - print: "incr"
+            ▿ Boundaries.Cmd<BoundariesTests.MyEffect>.execute
+              ▿ execute: BoundariesTests.MyEffect.trackAnalytics
+                ▿ trackAnalytics: (2 elements)
+                  - eventName: "Incremented"
+                  ▿ properties: 1 key/value pair
+                    ▿ (2 elements)
+                      - key: "count"
+                      - value: 1
   ▿ (4 elements)
     - message: ""
     ▿ action: BoundariesTests.AppAction.counterAction

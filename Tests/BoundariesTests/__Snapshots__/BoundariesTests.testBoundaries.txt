@@ -12,18 +12,38 @@
       - counterAction: BoundariesTests.CounterAction.incr
     ▿ state: BoundariesTests.CounterState
       - count: 1
-    ▿ effect: Boundaries.Cmd<BoundariesTests.MyEffect>.execute
-      ▿ execute: BoundariesTests.MyEffect.print
-        - print: "incr"
+    ▿ effect: Boundaries.Cmd<BoundariesTests.MyEffect>.parallel
+      ▿ parallel: 2 elements
+        ▿ Boundaries.Cmd<BoundariesTests.MyEffect>.execute
+          ▿ execute: BoundariesTests.MyEffect.print
+            - print: "incr"
+        ▿ Boundaries.Cmd<BoundariesTests.MyEffect>.execute
+          ▿ execute: BoundariesTests.MyEffect.trackAnalytics
+            ▿ trackAnalytics: (2 elements)
+              - eventName: "Incremented"
+              ▿ properties: 1 key/value pair
+                ▿ (2 elements)
+                  - key: "count"
+                  - value: 1
   ▿ (4 elements)
     - message: ""
     ▿ action: BoundariesTests.AppAction.counterAction
       - counterAction: BoundariesTests.CounterAction.incr
     ▿ state: BoundariesTests.CounterState
       - count: 2
-    ▿ effect: Boundaries.Cmd<BoundariesTests.MyEffect>.execute
-      ▿ execute: BoundariesTests.MyEffect.print
-        - print: "incr"
+    ▿ effect: Boundaries.Cmd<BoundariesTests.MyEffect>.parallel
+      ▿ parallel: 2 elements
+        ▿ Boundaries.Cmd<BoundariesTests.MyEffect>.execute
+          ▿ execute: BoundariesTests.MyEffect.print
+            - print: "incr"
+        ▿ Boundaries.Cmd<BoundariesTests.MyEffect>.execute
+          ▿ execute: BoundariesTests.MyEffect.trackAnalytics
+            ▿ trackAnalytics: (2 elements)
+              - eventName: "Incremented"
+              ▿ properties: 1 key/value pair
+                ▿ (2 elements)
+                  - key: "count"
+                  - value: 2
   ▿ (4 elements)
     - message: ""
     ▿ action: BoundariesTests.AppAction.counterAction

@@ -34,8 +34,14 @@ public struct Reducer<S, A, E: EffectProtocol> {
     }
   }
 
-  public func lift<T, B>(action prism: Prism<B, A>, state keyPath: WritableKeyPath<T, S>) -> Reducer<T, B, E> {
-    return self.lift(action: prism).lift(state: keyPath)
+  public func lift<T, B>(
+    action prism: Prism<B, A>,
+    state keyPath: WritableKeyPath<T, S>
+    )
+    ->
+    Reducer<T, B, E> {
+
+      return self.lift(action: prism).lift(state: keyPath)
   }
 }
 
@@ -48,7 +54,7 @@ extension Reducer: Monoid {
     return .init { action, state in
       let (state1, effect1) = lhs.reduce(action, state)
       let (state2, effect2) = rhs.reduce(action, state1)
-      return (state2, .sequence([effect1, effect2]))
+      return (state2, effect1 <> effect2)
     }
   }
 }

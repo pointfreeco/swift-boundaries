@@ -49,8 +49,14 @@ public final class Store<S, E: EffectProtocol> {
       }
 
     case .parallel:
-      catOptionals(self.interpretedActions(effect))
-        .forEach(self.dispatch)
+      DispatchQueue.global().async {
+        catOptionals(self.interpretedActions(effect))
+          .forEach { action in
+            DispatchQueue.main.async {
+              self.dispatch(action)
+            }
+        }
+      }
 
     case let .dispatch(action):
       self.dispatch(action)

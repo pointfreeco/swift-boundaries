@@ -16,7 +16,7 @@ public final class Store<S, E: EffectProtocol> {
   var subscribers: [(S) -> Void] = []
   var currentState: S {
     didSet {
-      subscribers.forEach { $0(self.currentState) }
+      self.subscribers.forEach { $0(self.currentState) }
     }
   }
 

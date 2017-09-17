@@ -6,20 +6,31 @@ public final class TestStore<S, E: EffectProtocol> {
   public typealias A = E.A
 
   public let reducer: Reducer<S, A, E>
+  public var subscribers: [(S) -> Void] = []
   public let execute: (E) -> A?
 
   public private(set) var history: NonEmptyArray<(message: String, action: Any, state: S, effect: Cmd<E>)>
 
-  public var currentState: S { return self.history.last.state }
+  public var currentState: S {
+    didSet {
+      self.subscribers.forEach { $0(self.currentState) }
+    }
+  }
 
   public init(reducer: Reducer<S, A, E>, initialState: S, execute: @escaping (E) -> A?) {
     self.reducer = reducer
     self.history = ("TestStore.init", "init", initialState, .parallel([])) >| []
+    self.currentState = initialState
     self.execute = execute
+  }
+
+  public func subscribe(_ subscriber: @escaping (S) -> Void) {
+    self.subscribers.append(subscriber)
   }
 
   public func dispatch(_ action: A, _ message: String = "") {
     let (state, effect) = self.reducer.reduce(action, self.history.last.state)
+    self.currentState = state
     self.history.append((message, action, state, effect))
     self.interpret(effect)
   }

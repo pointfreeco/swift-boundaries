@@ -5,10 +5,10 @@ import Dispatch
 import PlaygroundSupport
 PlaygroundPage.current.needsIndefiniteExecution = true
 
-enum TestEffect<A>: EffectProtocol {
-  func execute() -> A? {
-    return nil
-  }
+enum TestEffect: EffectProtocol {
+  typealias A = CounterAction
+
+  case print(String)
 }
 
 struct CounterState {
@@ -20,20 +20,29 @@ enum CounterAction {
   case decr
 }
 
-let counterReducer = Reducer<CounterState, CounterAction, TestEffect<CounterAction>> { action, state in
+let counterReducer = Reducer<CounterState, CounterAction, TestEffect> { action, state in
   switch action {
   case .incr:
-    return (state |> \.count +~ 1, .noop)
+    return (state |> \.count +~ 1, .execute(.print("incr")))
   case .decr:
-    return (state |> \.count -~ 1, .noop)
+    return (state |> \.count -~ 1, .execute(.print("decr")))
   }
 }
 
-let store = Store(reducer: counterReducer, initialState: .init(count: 0))
+let store = Store(
+  reducer: counterReducer,
+  initialState: .init(count: 0),
+  execute: { effect in
+    switch effect {
+    case let .print(message):
+      print(message)
+      return nil
+    }
+  }
+)
 
 store.subscribe { print($0) }
 
 store.dispatch(.incr)
 store.dispatch(.incr)
 store.dispatch(.incr)
-

@@ -3,6 +3,10 @@ import Foundation
 import Optics
 import Prelude
 
+enum Either<E: EffectProtocol, F>: EffectProtocol {
+  typealias A = E.A
+}
+
 public final class Store<S, E: EffectProtocol> {
   public typealias A = E.A
 

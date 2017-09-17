@@ -16,8 +16,8 @@
       ▿ counter: BoundariesTests.CounterState
         - count: 1
       - loggedIn: true
-    ▿ effect: Boundaries.Cmd<BoundariesTests.MyEffect>.sequence
-      ▿ sequence: 2 elements
+    ▿ effect: Boundaries.Cmd<BoundariesTests.MyEffect>.parallel
+      ▿ parallel: 2 elements
         ▿ Boundaries.Cmd<BoundariesTests.MyEffect>.parallel
           - parallel: 0 elements
         ▿ Boundaries.Cmd<BoundariesTests.MyEffect>.parallel
@@ -41,8 +41,8 @@
       ▿ counter: BoundariesTests.CounterState
         - count: 0
       - loggedIn: true
-    ▿ effect: Boundaries.Cmd<BoundariesTests.MyEffect>.sequence
-      ▿ sequence: 2 elements
+    ▿ effect: Boundaries.Cmd<BoundariesTests.MyEffect>.parallel
+      ▿ parallel: 2 elements
         ▿ Boundaries.Cmd<BoundariesTests.MyEffect>.parallel
           - parallel: 0 elements
         ▿ Boundaries.Cmd<BoundariesTests.MyEffect>.execute
@@ -55,8 +55,8 @@
       ▿ counter: BoundariesTests.CounterState
         - count: 0
       - loggedIn: false
-    ▿ effect: Boundaries.Cmd<BoundariesTests.MyEffect>.sequence
-      ▿ sequence: 2 elements
+    ▿ effect: Boundaries.Cmd<BoundariesTests.MyEffect>.parallel
+      ▿ parallel: 2 elements
         ▿ Boundaries.Cmd<BoundariesTests.MyEffect>.execute
           ▿ execute: BoundariesTests.MyEffect.request
             - request: "http://www.google.com"
@@ -70,8 +70,8 @@
       ▿ counter: BoundariesTests.CounterState
         - count: 0
       - loggedIn: false
-    ▿ effect: Boundaries.Cmd<BoundariesTests.MyEffect>.sequence
-      ▿ sequence: 2 elements
+    ▿ effect: Boundaries.Cmd<BoundariesTests.MyEffect>.parallel
+      ▿ parallel: 2 elements
         ▿ Boundaries.Cmd<BoundariesTests.MyEffect>.parallel
           - parallel: 0 elements
         ▿ Boundaries.Cmd<BoundariesTests.MyEffect>.parallel

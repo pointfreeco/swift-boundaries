@@ -21,10 +21,10 @@ public enum Cmd<E: EffectProtocol> {
   //       default global queue.
   /// Executes a sequence of effects asynchronously and dispatches the resulting actions in the order
   /// of the source sequence.
-  case parallel([Cmd<E>])
+  case parallel([Cmd])
 
   /// Executes a sequence of effects in
-  case sequence([Cmd<E>])
+  case sequence([Cmd])
 
   /// An effect that does nothing.
   public static var noop: Cmd { return .parallel([]) }

@@ -40,7 +40,7 @@ public final class Store<S, E: EffectProtocol> {
     self.subscribe(subscriber <<< view(getting(keyPath)))
   }
 
-  // Executes the effect
+  // Runs the effects and dispatches the resulting actions.
   private func interpret(_ effect: Cmd<E>) {
     switch effect {
     case let .execute(e):

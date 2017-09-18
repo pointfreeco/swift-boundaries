@@ -3,15 +3,11 @@ import Foundation
 import Optics
 import Prelude
 
-enum Either<E: EffectProtocol, F>: EffectProtocol {
-  typealias A = E.A
-}
-
-public final class Store<S, E: EffectProtocol> {
-  public typealias A = E.A
+public final class Store<S, E: Effect> {
+  public typealias A = E.Action
 
   let reducer: Reducer<S, A, E>
-  let execute: (E) -> A?
+  let interpret: (E) -> A?
 
   var subscribers: [(S) -> Void] = []
   var currentState: S {
@@ -20,10 +16,10 @@ public final class Store<S, E: EffectProtocol> {
     }
   }
 
-  public init(reducer: Reducer<S, A, E>, initialState: S, execute: @escaping (E) -> A?) {
+  public init(reducer: Reducer<S, A, E>, initialState: S, interpreter interpret: @escaping (E) -> A?) {
     self.reducer = reducer
     self.currentState = initialState
-    self.execute = execute
+    self.interpret = interpret
   }
 
   public func dispatch(_ action: A) {
@@ -49,7 +45,7 @@ public final class Store<S, E: EffectProtocol> {
   private func interpret(_ effect: Cmd<E>) {
     switch effect {
     case let .execute(e):
-      if let action = self.execute(e) {
+      if let action = self.interpret(e) {
         self.dispatch(action)
       }
 
@@ -75,7 +71,7 @@ public final class Store<S, E: EffectProtocol> {
   private func interpretedActions(_ effect: Cmd<E>) -> [A?] {
     switch effect {
     case let .execute(e):
-      return [self.execute(e)]
+      return [self.interpret(e)]
 
     case let .parallel(effects):
       return effects.pmap(self.interpretedActions).flatMap(id)

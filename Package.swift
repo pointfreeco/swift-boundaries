@@ -9,8 +9,8 @@ let package = Package(
     .library(name: "BoundariesTestSupport", targets: ["BoundariesTestSupport"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/pointfreeco/swift-prelude.git", .revision("06e745a")),
-    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", .revision("2c2b390")),
+    .package(url: "https://github.com/pointfreeco/swift-prelude.git", .revision("aab186e")),
+    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", .revision("6a292e9")),
   ],
   targets: [
     .target(

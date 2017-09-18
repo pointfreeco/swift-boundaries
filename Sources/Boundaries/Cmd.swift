@@ -3,16 +3,16 @@ import Prelude
 /// A protocol that describes an effect to be performed. `Self` is the description of the effect (typically
 /// an enum with a case for each type of effect supported), and `A` is the resulting action that should
 /// be dispatched back to the store.
-public protocol EffectProtocol {
-  associatedtype A
+public protocol Effect {
+  associatedtype Action
 }
 
 /// Provides a way of combining effects.
-public enum Cmd<E: EffectProtocol> {
-  public typealias A = E.A
+public enum Cmd<E: Effect> {
+  public typealias Action = E.Action
 
   /// Dispatches an action back to the store.
-  case dispatch(A)
+  case dispatch(Action)
 
   /// Executes an effect synchronously and dispatches it’s resulting action immediately.
   case execute(E)
@@ -34,6 +34,6 @@ extension Cmd: Monoid {
   public static var empty: Cmd { return .noop }
 
   public static func <> (lhs: Cmd, rhs: Cmd) -> Cmd {
-    return .parallel([lhs, rhs])
+    return .sequence([lhs, rhs])
   }
 }

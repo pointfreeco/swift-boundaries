@@ -85,8 +85,8 @@ enum AppAction {
   }
 }
 
-enum MyEffect: EffectProtocol {
-  typealias A = AppAction
+enum MyEffect: Effect {
+  typealias Action = AppAction
   case print(String)
   case request(String)
   case trackAnalytics(eventName: String, properties: [String: Any])

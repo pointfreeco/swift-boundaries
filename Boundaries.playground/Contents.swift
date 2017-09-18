@@ -5,8 +5,8 @@ import Dispatch
 import PlaygroundSupport
 PlaygroundPage.current.needsIndefiniteExecution = true
 
-enum TestEffect: EffectProtocol {
-  typealias A = CounterAction
+enum TestEffect: Effect {
+  typealias Action = CounterAction
 
   case print(String)
 }

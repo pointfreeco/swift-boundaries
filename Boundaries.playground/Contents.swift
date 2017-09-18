@@ -32,7 +32,7 @@ let counterReducer = Reducer<CounterState, CounterAction, TestEffect> { action, 
 let store = Store(
   reducer: counterReducer,
   initialState: .init(count: 0),
-  execute: { effect in
+  interpreter: { effect in
     switch effect {
     case let .print(message):
       print(message)

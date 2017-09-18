@@ -1,20 +1,23 @@
-import XCTest
 import Boundaries
 import BoundariesTestSupport
-import Optics
-import Prelude
 import SnapshotTesting
+import XCTest
 
 final class BoundariesTests: XCTestCase {
+  override func setUp() {
+    super.setUp()
+  }
+
   func testBoundaries() {
-    let store = TestStore(
-      reducer: counterReducer,
-      initialState: .init(count: 0)
+    let store = TestStore<CounterState, MyEffect>(
+      reducer: counterReducer.lift(action: AppAction.prism.counterAction),
+      initialState: .init(count: 0),
+      execute: testExecute
     )
 
-    store.dispatch(.incr)
-    store.dispatch(.incr)
-    store.dispatch(.decr)
+    store.dispatch(.counterAction(.incr))
+    store.dispatch(.counterAction(.incr))
+    store.dispatch(.counterAction(.decr))
 
     assertSnapshot(matching: store)
   }
@@ -22,7 +25,8 @@ final class BoundariesTests: XCTestCase {
   func testCombinedBoundaries() {
     let store = TestStore(
       reducer: combinedReducer,
-      initialState: AppState(counter: .init(count: 0), loggedIn: true)
+      initialState: AppState(counter: .init(count: 0), loggedIn: true),
+      execute: testExecute
     )
 
     store.dispatch(.counterAction(.incr))
@@ -33,81 +37,3 @@ final class BoundariesTests: XCTestCase {
   }
 }
 
-func print<A>(_ string: String) -> Effect<A> {
-  return .execute(fingerprint: [#function, string]) { _ in print(string) }
-}
-
-struct CounterState {
-  var count: Int
-}
-
-enum CounterAction {
-  case incr
-  case decr
-}
-
-let counterReducer = Reducer<CounterState, CounterAction> { action, state in
-  switch action {
-  case .incr:
-    return (state |> \.count +~ 1, print("incr"))
-  case .decr:
-    return (state |> \.count -~ 1, print("decr"))
-  }
-}
-
-struct SettingsState {
-  var loggedIn: Bool
-}
-
-enum SettingsAction {
-  case logout
-}
-
-let settingsReducer = Reducer<SettingsState, SettingsAction> { action, state in
-  switch action {
-  case .logout:
-    return (
-      .init(loggedIn: false),
-      .execute(fingerprint: "Clear Cache") { _ in }
-    )
-  }
-}
-
-struct AppState {
-  var counter: CounterState
-  var loggedIn: Bool
-
-  var settingsState: SettingsState {
-    get { return .init(loggedIn: self.loggedIn) }
-    set { self = .init(counter: self.counter, loggedIn: newValue.loggedIn)}
-  }
-}
-
-enum AppAction {
-  case counterAction(CounterAction)
-  case settingsAction(SettingsAction)
-
-  enum prism {
-    static var counterAction: Prism<AppAction, CounterAction> {
-      return .init(
-        preview: { action in
-          guard case let .counterAction(a) = action else { return nil }
-          return a },
-        review: AppAction.counterAction
-      )
-    }
-
-    static var settingsAction: Prism<AppAction, SettingsAction> {
-      return .init(
-        preview: { action in
-          guard case let .settingsAction(a) = action else { return nil }
-          return a },
-        review: AppAction.settingsAction
-      )
-    }
-  }
-}
-
-let combinedReducer: Reducer<AppState, AppAction> =
-  settingsReducer.lift(action: AppAction.prism.settingsAction, state: \.settingsState)
-    <> counterReducer.lift(action: AppAction.prism.counterAction, state: \.counter)

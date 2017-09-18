@@ -88,37 +88,28 @@ public final class Store<S, E: Effect> {
 extension Array {
   // TODO: move to prelude
 
-  /// Performs a parallel map of a transformation over an array. Splits the array into chunks based on the
-  /// number of computing cores.
-  public func pmap<T>(_ f: @escaping (Iterator.Element) -> T) -> [T] {
+  /// Performs a parallel map of a transformation over an array.
+  public func pmap<A>(_ f: @escaping (Iterator.Element) -> A) -> [A] {
     return self.pmap(queue: .global(), f)
   }
 
-  public func pmap<T>(queue: DispatchQueue, _ f: @escaping (Iterator.Element) -> T) -> [T] {
+  public func pmap<A>(queue: DispatchQueue, _ f: @escaping (Iterator.Element) -> A) -> [A] {
     guard !self.isEmpty else { return [] }
 
-    var result: [Int: [T]] = .init(minimumCapacity: self.count)
-
-    let coreCount = ProcessInfo.processInfo.activeProcessorCount
-    let sampleSize = Int(ceil(Double(self.count) / Double(coreCount)))
+    var result = Array<A?>(repeating: A?.none, count: self.count)
 
     let group = DispatchGroup()
 
-    (0..<sampleSize).forEach { idx in
-
-      let startIndex = idx * coreCount
-      let endIndex = Swift.min((startIndex + (coreCount - 1)), self.count - 1)
-      result[startIndex] = []
-
+    self.indices.forEach { idx in
       group.enter()
-      DispatchQueue.global().async {
-        result[startIndex] = (startIndex...endIndex).map { idx in f(self[idx]) }
+      queue.async {
+        result[idx] = f(self[idx])
         group.leave()
       }
     }
 
     group.wait()
 
-    return result.sorted(by: { $0.0 < $1.0 }).flatMap(second)
+    return result.flatMap(id)
   }
 }

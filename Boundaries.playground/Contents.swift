@@ -6,8 +6,15 @@ import Prelude
 import PlaygroundSupport
 PlaygroundPage.current.needsIndefiniteExecution = true
 
+enum Endpoint {
+  case user(Int)
+  case users
+}
+
 enum TestEffect: EffectProtocol {
   typealias Action = CounterAction
+
+  case api(Endpoint)
 }
 
 struct CounterState {
@@ -15,6 +22,7 @@ struct CounterState {
 }
 
 enum CounterAction {
+  case apiResult(Any)
   case decr
   case incr
   case gotRandomInt(Int)
@@ -45,7 +53,7 @@ let counterReducer = Reducer<CounterState, CounterAction, Effect<TestEffect>> { 
           ),
           .execute(.randomInt(min: 10, max: 20, CounterAction.gotRandomInt)),
 
-//          .execute(.other(.effect))
+          .execute(.other(.api(.user(1))))
         ]
       )
     )
@@ -57,14 +65,21 @@ let counterReducer = Reducer<CounterState, CounterAction, Effect<TestEffect>> { 
   case let .isPrimeResult(data, _, _):
     print(String(data: data!, encoding: .utf8)!)
     return (state, .noop)
+  case let .apiResult(response):
+    print(response)
   }
+
+  return (state, .noop)
 }
 
 let store = Store(
   reducer: counterReducer,
   initialState: .init(count: 0),
   interpreter: { effect in
-    return nil
+    switch effect {
+    case let .api(endpoint):
+      return .apiResult("\(endpoint)")
+    }
   }
 )
 

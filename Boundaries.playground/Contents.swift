@@ -44,6 +44,8 @@ let counterReducer = Reducer<CounterState, CounterAction, Effect<TestEffect>> { 
             .urlSession(apiRequest(state.count + 1), CounterAction.isPrimeResult)
           ),
           .execute(.randomInt(min: 10, max: 20, CounterAction.gotRandomInt)),
+
+//          .execute(.other(.effect))
         ]
       )
     )

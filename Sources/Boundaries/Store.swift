@@ -3,11 +3,11 @@ import Foundation
 import Optics
 import Prelude
 
-public final class Store<S, E: Effect> {
+public final class Store<S, E: EffectProtocol> {
   public typealias A = E.Action
 
-  let reducer: Reducer<S, A, E>
-  let interpret: (E) -> A?
+  let reducer: Reducer<S, A, Effect<E>>
+  let interpret: (Effect<E>) -> A?
 
   var subscribers: [(S) -> Void] = []
   var currentState: S {
@@ -16,10 +16,10 @@ public final class Store<S, E: Effect> {
     }
   }
 
-  public init(reducer: Reducer<S, A, E>, initialState: S, interpreter interpret: @escaping (E) -> A?) {
+  public init(reducer: Reducer<S, A, Effect<E>>, initialState: S, interpreter interpret: @escaping (E) -> A?) {
     self.reducer = reducer
     self.currentState = initialState
-    self.interpret = interpret
+    self.interpret = wrap(interpreter: interpret)
   }
 
   public func dispatch(_ action: A) {
@@ -42,7 +42,7 @@ public final class Store<S, E: Effect> {
   }
 
   // Runs the effects and dispatches the resulting actions.
-  private func interpret(_ effect: Cmd<E>) {
+  private func interpret(_ effect: Cmd<Effect<E>>) {
     switch effect {
     case let .execute(e):
       if let action = self.interpret(e) {
@@ -68,7 +68,7 @@ public final class Store<S, E: Effect> {
   }
 
   // Runs the effects and collects all of the resulting actions without dispatching them.
-  private func interpretedActions(_ effect: Cmd<E>) -> [A?] {
+  private func interpretedActions(_ effect: Cmd<Effect<E>>) -> [A?] {
     switch effect {
     case let .execute(e):
       return [self.interpret(e)]
@@ -113,3 +113,4 @@ extension Array {
     return result.flatMap(id)
   }
 }
+

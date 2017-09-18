@@ -11,7 +11,7 @@ public struct Prism<A, B> {
   }
 }
 
-public struct Reducer<S, A, E: Effect> {
+public struct Reducer<S, A, E: EffectProtocol> {
   public let reduce: (A, S) -> (S, Cmd<E>)
 
   public init(_ reduce: @escaping (A, S) -> (S, Cmd<E>)) {

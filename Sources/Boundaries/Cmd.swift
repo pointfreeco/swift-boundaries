@@ -3,12 +3,12 @@ import Prelude
 /// A protocol that describes an effect to be performed. `Self` is the description of the effect (typically
 /// an enum with a case for each type of effect supported), and `A` is the resulting action that should
 /// be dispatched back to the store.
-public protocol Effect {
+public protocol EffectProtocol {
   associatedtype Action
 }
 
 /// Provides a way of combining effects.
-public enum Cmd<E: Effect> {
+public enum Cmd<E: EffectProtocol> {
   public typealias Action = E.Action
 
   /// Dispatches an action back to the store.

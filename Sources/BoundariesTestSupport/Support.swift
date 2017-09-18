@@ -2,7 +2,7 @@ import Boundaries
 import NonEmpty
 import SnapshotTesting
 
-public final class TestStore<S, E: Effect> {
+public final class TestStore<S, E: EffectProtocol> {
   public typealias A = E.Action
 
   public let reducer: Reducer<S, A, E>
